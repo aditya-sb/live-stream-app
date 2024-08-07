@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { login as loginApi, register as registerApi } from '../api/auth';
 
 const AuthContext = createContext();
@@ -13,6 +13,26 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const authTokenString = localStorage?.getItem('authToken');
+    const authToken = JSON.parse(authTokenString);
+    const token = authToken?.access_token;
+    if (token) {
+      try {
+        const decodedToken = decodeJwt(token);
+        setUser({ token: token, ...decodedToken });
+      } catch (error) {
+        console.error('Failed to decode token:', error);
+      }
+    }
+  }, []);
+
+  const decodeJwt = (token) => {
+    const base64Payload = token.split('.')[1];
+    const payload = decodeURIComponent(atob(base64Payload).split('').map((c) => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`).join(''));
+    return JSON.parse(payload);
+  };
 
   const login = async (credentials) => {
     try {
@@ -44,8 +64,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('authToken');
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, register }}>
+    <AuthContext.Provider value={{ user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

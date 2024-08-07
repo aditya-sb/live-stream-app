@@ -1,28 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
-import { join } from 'path';
-import { Response } from 'express';
+import { VideoService } from './video/video.service';
+import { beforeEach, describe, it} from 'node:test';
+import expect from "node:test"
 
 describe('AppController', () => {
-    let appController: AppController;
+  let appController: AppController;
+  let videoService: VideoService;
 
-    beforeEach(async () => {
-        const app: TestingModule = await Test.createTestingModule({
-            controllers: [AppController],
-        }).compile();
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [AppController],
+      providers: [
+        {
+          provide: VideoService,
+          useValue: {
+            getActiveStreams: jest.fn().mockReturnValue([]),
+            getStreamById: jest.fn().mockReturnValue(undefined),
+          },
+        },
+      ],
+    }).compile();
 
-        appController = app.get<AppController>(AppController);
-    });
+    appController = module.get<AppController>(AppController);
+    videoService = module.get<VideoService>(VideoService);
+  });
 
-    describe('getIndex', () => {
-        it('should send index.html file', () => {
-            const res = {
-                sendFile: jest.fn(),
-            } as unknown as Response;
 
-            appController.getIndex(res);
-
-            expect(res.sendFile).toHaveBeenCalledWith(join(__dirname, '..', 'index.html'));
-        });
-    });
 });

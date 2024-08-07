@@ -21,7 +21,7 @@ function SignupPage() {
       navigate('/login');
     } catch (error) {
       console.error('Signup failed', error);
-      setError('Signup failed: ' + (error.response?.data?.message || 'Please try again'));
+      setError(error.message || 'Signup failed. Please try again.');
     }
   };
 
@@ -34,13 +34,25 @@ function SignupPage() {
         <Stack spacing={4}>
           <FormControl isInvalid={!!error}>
             <FormLabel>Username</FormLabel>
-            <Input type="text" name="username" placeholder="Username" onChange={handleChange} />
-            <FormErrorMessage>{error}</FormErrorMessage>
+            <Input 
+              type="text" 
+              name="username" 
+              placeholder="Username" 
+              onChange={handleChange} 
+              isInvalid={!!error} 
+            />
+            {error && <FormErrorMessage>{error}</FormErrorMessage>}
           </FormControl>
           <FormControl isInvalid={!!error}>
             <FormLabel>Password</FormLabel>
-            <Input type="password" name="password" placeholder="Password" onChange={handleChange} />
-            <FormErrorMessage>{error}</FormErrorMessage>
+            <Input 
+              type="password" 
+              name="password" 
+              placeholder="Password" 
+              onChange={handleChange} 
+              isInvalid={!!error} 
+            />
+            {error && <FormErrorMessage>{error}</FormErrorMessage>}
           </FormControl>
           <Button type="submit" colorScheme="purple">Sign Up</Button>
         </Stack>

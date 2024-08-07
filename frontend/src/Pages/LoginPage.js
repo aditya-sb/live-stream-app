@@ -20,7 +20,7 @@ function LoginPage() {
       navigate('/profile');
     } catch (error) {
       console.error('Login failed', error);
-      setError('Login failed: ' + (error.response?.data?.message || 'Invalid username or password'));
+      setError(error.message || 'Login failed. Please try again.');
     }
   };
 
@@ -33,13 +33,25 @@ function LoginPage() {
         <Stack spacing={4}>
           <FormControl isInvalid={!!error}>
             <FormLabel>Username</FormLabel>
-            <Input type="text" name="username" placeholder="Username" onChange={handleChange} />
-            <FormErrorMessage>{error}</FormErrorMessage>
+            <Input 
+              type="text" 
+              name="username" 
+              placeholder="Username" 
+              onChange={handleChange} 
+              isInvalid={!!error} 
+            />
+            {error && <FormErrorMessage>{error}</FormErrorMessage>}
           </FormControl>
           <FormControl isInvalid={!!error}>
             <FormLabel>Password</FormLabel>
-            <Input type="password" name="password" placeholder="Password" onChange={handleChange} />
-            <FormErrorMessage>{error}</FormErrorMessage>
+            <Input 
+              type="password" 
+              name="password" 
+              placeholder="Password" 
+              onChange={handleChange} 
+              isInvalid={!!error} 
+            />
+            {error && <FormErrorMessage>{error}</FormErrorMessage>}
           </FormControl>
           <Button type="submit" colorScheme="teal">Login</Button>
         </Stack>

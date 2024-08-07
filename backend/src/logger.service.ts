@@ -1,41 +1,24 @@
-import { Injectable, LoggerService } from '@nestjs/common';
-import * as winston from 'winston';
+import { Injectable, LoggerService as NestLoggerService, LogLevel } from '@nestjs/common';
 
 @Injectable()
-export class Logger implements LoggerService {
-    private logger: winston.Logger;
-
-    constructor() {
-        this.logger = winston.createLogger({
-            level: 'info',
-            format: winston.format.combine(
-                winston.format.timestamp(),
-                winston.format.printf(({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`)
-            ),
-            transports: [
-                new winston.transports.Console(),
-                new winston.transports.File({ filename: 'combined.log' }),
-            ],
-        });
-    }
-
-    log(message: string): void {
-        this.logger.info(message);
-    }
-
-    error(message: string, trace: string): void {
-        this.logger.error(`${message} - ${trace}`);
-    }
-
-    warn(message: string): void {
-        this.logger.warn(message);
-    }
-
-    debug(message: string): void {
-        this.logger.debug(message);
-    }
-
-    verbose(message: string): void {
-        this.logger.verbose(message);
-    }
+export class Logger implements NestLoggerService {
+  log(message: string) {
+    console.log(message);
+  }
+  
+  error(message: string, trace: string) {
+    console.error(message, trace);
+  }
+  
+  warn(message: string) {
+    console.warn(message);
+  }
+  
+  debug(message: string) {
+    console.debug(message);
+  }
+  
+  verbose(message: string) {
+    console.log(message);
+  }
 }

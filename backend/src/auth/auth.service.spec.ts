@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/user.entity';
 import * as bcrypt from 'bcrypt';
+import { beforeEach, describe, it } from 'node:test';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -76,3 +77,7 @@ describe('AuthService', () => {
     });
   });
 });
+function expect(service: AuthService) {
+  throw new Error('Function not implemented.');
+}
+
